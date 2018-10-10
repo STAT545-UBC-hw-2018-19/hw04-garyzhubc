@@ -22,6 +22,7 @@ Take a glance of the dataset.
 ```{r}
 knitr::kable(head(gapminder))
 ```
+
 Spread lifeExp across two asian countries: China and Japan.
 ```{r}
 china_vs_japan_lifeExp = gapminder %>% 
@@ -30,6 +31,7 @@ china_vs_japan_lifeExp = gapminder %>%
   spread(key=country,value=lifeExp)
 knitr::kable(china_vs_japan_lifeExp)
 ```
+
 This has made it easy to make a scatterplot of these two countries' life expectancies.
 ```{r}
 ggplot(china_vs_japan_lifeExp, aes(year)) +
@@ -56,6 +58,7 @@ hemisphere_info = tribble( ~continent, ~hemisphere,
                            "Oceania", "South" )
 (gapminder_with_hemisphere = right_join(hemisphere_info, gapminder, by="continent"))
 ```
+
 We plot lifeExp each year colored by north or south hemisphere. We can see the north has in general higher lifeExpectancy than the south. Many countries in the south experienced sharpe decrease of lifeExp in the 90s.
 ```{r}
 ggplot(gapminder_with_hemisphere, aes(year, lifeExp)) + 
