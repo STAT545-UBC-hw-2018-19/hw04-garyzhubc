@@ -1,0 +1,65 @@
+---
+title: "hw04"
+output: github_document
+---
+Hi! This is my homework 4 submission. 
+
+## Content
+ * [Data Reshaping Prompt](#data-reshaping-prompt)
+ * [Join Prompts](#join-prompts)
+
+Load packages
+```{r}
+suppressPackageStartupMessages(require(gapminder))
+suppressPackageStartupMessages(require(tidyverse))
+suppressPackageStartupMessages(require(knitr))
+```
+
+# Data Reshaping Prompts
+
+## Activity 2
+Take a glance of the dataset.
+```{r}
+knitr::kable(head(gapminder))
+```
+Spread lifeExp across two asian countries: China and Japan.
+```{r}
+china_vs_japan_lifeExp = gapminder %>% 
+  filter(country %in% c("China","Japan")) %>% 
+  select(lifeExp, country, year) %>% 
+  spread(key=country,value=lifeExp)
+knitr::kable(china_vs_japan_lifeExp)
+```
+This has made it easy to make a scatterplot of these two countries' life expectancies.
+```{r}
+ggplot(china_vs_japan_lifeExp, aes(year)) +
+  geom_point(aes(y=China, color="China")) +
+  geom_point(aes(y=Japan, color="Japan")) +
+  labs(y = "lifeExp") 
+```
+
+
+# Join Prompts
+
+## Activity 1
+See how many unique values.
+```{r}
+unique(gapminder$continent)
+```
+Make a dataset that contains hemisphere information of each continent.
+```{r}
+hemisphere_info = tribble( ~continent, ~hemisphere, 
+                           "Asia", "North",
+                           "Europe", "North",
+                           "Africa", "South",
+                           "Americas", "North",
+                           "Oceania", "South" )
+(gapminder_with_hemisphere = right_join(hemisphere_info, gapminder, by="continent"))
+```
+We plot lifeExp each year colored by north or south hemisphere. We can see the north has in general higher lifeExpectancy than the south. Many countries in the south experienced sharpe decrease of lifeExp in the 90s.
+```{r}
+ggplot(gapminder_with_hemisphere, aes(year, lifeExp)) + 
+  geom_line(aes(group=country, color=hemisphere), alpha=0.4)
+```
+
+Have a good day!
